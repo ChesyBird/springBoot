@@ -1,14 +1,25 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.demo.dto.Emp;
+import com.example.demo.sevice.EmpService;
 
 
 
 @Controller 
 public class EmpController {
+
+    @Autowired 
+    private EmpService service;
+
     /* 
      url 호출이 되면 html화면을 서비스
         파라메터 수집
@@ -20,8 +31,19 @@ public class EmpController {
             - 반환값 없음 : 요청 경로에 대항하는 페이지
     */
     // @RequestParan : 기본값이 필수
+    // model : 모델에 저장된 데이터를 화면에 전달
+    //         controller에서 매개변수로 받아서 사용
     @GetMapping("/emps")
-    public String getIndex(@RequestParam(value = "param" , defaultValue = "123") String param ) {
+    public String getIndex(@RequestParam(value = "param" , defaultValue = "123") 
+                                        String param, Model model ) {
+        // 서비스 호출 - 비즈니스로직 실행
+        List<Emp> list = service.search(model);
+        // 모델에 데이터를 추가 -> 화면에 전달
+        // 이름, 값
+        model.addAttribute("title", "리스트");
+        model.addAttribute("emp", list.get(0));
+        model.addAttribute("list", list);
+        System.out.println(param + " : 수집된 파라메터");
         return "/hr/index";
     }
 

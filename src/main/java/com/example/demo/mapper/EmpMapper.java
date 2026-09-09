@@ -32,4 +32,6 @@ public interface EmpMapper {
     @Select ("select * from emp where emp_id=#{emp_id}")
     public Emp selectById(String empId);
 
+    
+
 }
